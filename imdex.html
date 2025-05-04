@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <title>Global Crop Yield Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        input:focus, select:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+        .result {
+            text-align: center;
+            font-size: 22px;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 8px;
+            color: #2e7d32;
+            animation: fadeIn 0.6s ease-out;
+        }
+        .spinner {
+            display: none;
+            margin: 30px auto;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #4CAF50;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .error {
+            color: #c62828;
+            background-color: #ffebee;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            animation: fadeIn 0.4s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌱 AgriPredict – Powered by Data Army @ Zongovation </h1>
+        
+        <div class="card">
+            <form action="/predict" method="post" onsubmit="showSpinner()">
+                <label for="Year">Year:</label>
+                <input type="number" name="Year" min="1990" max="2030" required>
+
+                <label for="average_rain_fall_mm_per_year">Average Rainfall (mm/year):</label>
+                <input type="number" step="0.1" name="average_rain_fall_mm_per_year" min="0" required>
+
+                <label for="pesticides_tonnes">Pesticides (tonnes):</label>
+                <input type="number" step="0.01" name="pesticides_tonnes" min="0" required>
+
+                <label for="avg_temp">Average Temperature (°C):</label>
+                <input type="number" step="0.1" name="avg_temp" required>
+
+                <label for="Area">Region:</label>
+                <select name="Area" required>
+                    <option value="">-- Select Country --</option>
+                    
+                    <optgroup label="Africa">
+                        <option value="Algeria">Algeria</option>
+                        <option value="Angola">Angola</option>
+                        <option value="Botswana">Botswana</option>
+                        <option value="Burkina Faso">Burkina Faso</option>
+                        <option value="Burundi">Burundi</option>
+                        <option value="Cameroon">Cameroon</option>
+                        <option value="Central African Republic">Central African Republic</option>
+                        <option value="Egypt">Egypt</option>
+                        <option value="Eritrea">Eritrea</option>
+                        <option value="Ghana">Ghana</option>
+                        <option value="Guinea">Guinea</option>
+                        <option value="Kenya">Kenya</option>
+                        <option value="Lesotho">Lesotho</option>
+                        <option value="Libya">Libya</option>
+                        <option value="Madagascar">Madagascar</option>
+                        <option value="Malawi">Malawi</option>
+                        <option value="Mali">Mali</option>
+                        <option value="Mauritania">Mauritania</option>
+                        <option value="Mauritius">Mauritius</option>
+                        <option value="Morocco">Morocco</option>
+                        <option value="Mozambique">Mozambique</option>
+                        <option value="Namibia">Namibia</option>
+                        <option value="Niger">Niger</option>
+                        <option value="Rwanda">Rwanda</option>
+                        <option value="Senegal">Senegal</option>
+                        <option value="South Africa">South Africa</option>
+                        <option value="Sudan">Sudan</option>
+                        <option value="Tunisia">Tunisia</option>
+                        <option value="Uganda">Uganda</option>
+                        <option value="Zambia">Zambia</option>
+                        <option value="Zimbabwe">Zimbabwe</option>
+                    </optgroup>
+                    
+                    <optgroup label="Asia">
+                        <option value="Armenia">Armenia</option>
+                        <option value="Azerbaijan">Azerbaijan</option>
+                        <option value="Bahrain">Bahrain</option>
+                        <option value="Bangladesh">Bangladesh</option>
+                        <option value="India">India</option>
+                        <option value="Indonesia">Indonesia</option>
+                        <option value="Iraq">Iraq</option>
+                        <option value="Japan">Japan</option>
+                        <option value="Kazakhstan">Kazakhstan</option>
+                        <option value="Lebanon">Lebanon</option>
+                        <option value="Malaysia">Malaysia</option>
+                        <option value="Nepal">Nepal</option>
+                        <option value="Pakistan">Pakistan</option>
+                        <option value="Papua New Guinea">Papua New Guinea</option>
+                        <option value="Qatar">Qatar</option>
+                        <option value="Saudi Arabia">Saudi Arabia</option>
+                        <option value="Sri Lanka">Sri Lanka</option>
+                        <option value="Tajikistan">Tajikistan</option>
+                        <option value="Thailand">Thailand</option>
+                        <option value="Turkey">Turkey</option>
+                    </optgroup>
+                    
+                    <optgroup label="Europe">
+                        <option value="Albania">Albania</option>
+                        <option value="Austria">Austria</option>
+                        <option value="Belarus">Belarus</option>
+                        <option value="Belgium">Belgium</option>
+                        <option value="Bulgaria">Bulgaria</option>
+                        <option value="Croatia">Croatia</option>
+                        <option value="Denmark">Denmark</option>
+                        <option value="Estonia">Estonia</option>
+                        <option value="Finland">Finland</option>
+                        <option value="France">France</option>
+                        <option value="Germany">Germany</option>
+                        <option value="Greece">Greece</option>
+                        <option value="Hungary">Hungary</option>
+                        <option value="Ireland">Ireland</option>
+                        <option value="Italy">Italy</option>
+                        <option value="Latvia">Latvia</option>
+                        <option value="Lithuania">Lithuania</option>
+                        <option value="Montenegro">Montenegro</option>
+                        <option value="Netherlands">Netherlands</option>
+                        <option value="Norway">Norway</option>
+                        <option value="Poland">Poland</option>
+                        <option value="Portugal">Portugal</option>
+                        <option value="Romania">Romania</option>
+                        <option value="Slovenia">Slovenia</option>
+                        <option value="Spain">Spain</option>
+                        <option value="Sweden">Sweden</option>
+                        <option value="Switzerland">Switzerland</option>
+                        <option value="Ukraine">Ukraine</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                    </optgroup>
+                    
+                    <optgroup label="North America">
+                        <option value="Bahamas">Bahamas</option>
+                        <option value="Canada">Canada</option>
+                        <option value="Dominican Republic">Dominican Republic</option>
+                        <option value="El Salvador">El Salvador</option>
+                        <option value="Guatemala">Guatemala</option>
+                        <option value="Haiti">Haiti</option>
+                        <option value="Honduras">Honduras</option>
+                        <option value="Jamaica">Jamaica</option>
+                        <option value="Mexico">Mexico</option>
+                        <option value="Nicaragua">Nicaragua</option>
+                        <option value="United States">United States</option>
+                    </optgroup>
+                    
+                    <optgroup label="South America">
+                        <option value="Argentina">Argentina</option>
+                        <option value="Brazil">Brazil</option>
+                        <option value="Chile">Chile</option>
+                        <option value="Colombia">Colombia</option>
+                        <option value="Ecuador">Ecuador</option>
+                        <option value="Guyana">Guyana</option>
+                        <option value="Peru">Peru</option>
+                        <option value="Suriname">Suriname</option>
+                        <option value="Uruguay">Uruguay</option>
+                    </optgroup>
+                    
+                    <optgroup label="Oceania">
+                        <option value="Australia">Australia</option>
+                        <option value="New Zealand">New Zealand</option>
+                    </optgroup>
+                </select>
+               
+
+                <select name="Item" required>
+                    <option value="">-- Select Crop --</option>
+                    
+                    <optgroup label="Grains">
+                        <option value="Maize">Maize</option>
+                        <option value="Rice">Rice</option>
+                        <option value="Sorghum">Sorghum</option>
+                        <option value="Wheat">Wheat</option>
+                    </optgroup>
+                    
+                    <optgroup label="Legumes">
+                        <option value="Soybeans">Soybeans</option>
+                    </optgroup>
+                    
+                    <optgroup label="Root Crops">
+                        <option value="Cassava">Cassava</option>
+                        <option value="Sweet potatoes">Sweet potatoes</option>
+                        <option value="Yams">Yams</option>
+                    </optgroup>
+                    
+                    <optgroup label="Other">
+                        <option value="Potatoes">Potatoes</option>
+                        <option value="Plantains and others">Plantains and others</option>
+                    </optgroup>
+                </select>
+
+                <div class="button-group">
+                    <input type="submit" value="Predict Yield">
+                    <button type="reset">Reset</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="spinner" id="spinner"></div>
+
+        
+            <div class="result">
+                📊 <strong>Predicted Yield:</strong> Your predicted yield will appear here.
+            </div>
+       
+    </div>
+
+    <script>
+        function showSpinner() {
+            document.getElementById("spinner").style.display = "block";
+            document.querySelector('input[type="submit"]').disabled = true;
+        }
+    </script>
+</body>
+</html>
