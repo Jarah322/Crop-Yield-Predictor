@@ -1,4 +1,4 @@
-# ZongoVation Crop Yield Prediction
+# Crop Yield Prediction
 
 ## Overview
 This project is a Flask-based web application that predicts crop yields based on various environmental and agricultural inputs. It uses a trained model and preprocessor to provide predictions and insights for different crops and regions.
@@ -47,6 +47,3 @@ This project is a Flask-based web application that predicts crop yields based on
 
 ## Contributing
 Feel free to submit issues and enhancement requests!
-
-## License
-This project is licensed under the MIT License - see the LICENSE file for details. 
